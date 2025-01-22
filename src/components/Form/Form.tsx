@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Input from '../input/Input';
+import formConfig from '../config/config.json'; 
+import { Button } from "digitinary-ui";
 
 interface FormField {
   type: string;
@@ -10,16 +12,8 @@ interface FormField {
 }
 
 const DynamicForm: React.FC = () => {
-  const [formFields, setFormFields] = useState<FormField[]>([]);
+  const [formFields, setFormFields] = useState<FormField[]>(formConfig);
   const [formData, setFormData] = useState<Record<string, string | number>>({});
-
-  useEffect(() => {
-    // Load the JSON file dynamically
-    fetch('/path/to/formConfig.json')
-      .then((response) => response.json())
-      .then((data: FormField[]) => setFormFields(data))
-      .catch((error) => console.error('Error loading form config:', error));
-  }, []);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
@@ -48,7 +42,7 @@ const DynamicForm: React.FC = () => {
           onChange={handleChange}
         />
       ))}
-      <button type="submit">Submit</button>
+      <Button type="submit">Submit</Button>
     </form>
   );
 };
