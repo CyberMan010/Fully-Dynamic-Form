@@ -8,6 +8,7 @@ interface InputProps {
   options?: string[];
   value?: string | number;
   onChange?: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  error?: string; 
 }
 
 const Input: React.FC<InputProps> = ({
@@ -18,40 +19,31 @@ const Input: React.FC<InputProps> = ({
   options,
   value,
   onChange,
+  error,
 }) => {
-  switch (type) {
-    case 'text':
-    case 'email':
-    case 'password':
-    case 'number':
-      return (
-        <div>
-          <label>{label}</label>
-          <input
-            type={type}
-            name={name}
-            placeholder={placeholder}
-            value={value}
-            onChange={onChange}
-          />
-        </div>
-      );
-    case 'select':
-      return (
-        <div>
-          <label>{label}</label>
-          <select name={name} value={value} onChange={onChange}>
-            {options?.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
-        </div>
-      );
-    default:
-      return null;
-  }
+  return (
+    <div>
+      <label>{label}</label>
+      {type === 'select' ? (
+        <select name={name} value={value} onChange={onChange}>
+          {options?.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+      ) : (
+        <input
+          type={type}
+          name={name}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+        />
+      )}
+      {error && <span style={{ color: 'red' }}>{error}</span>}
+    </div>
+  );
 };
 
 export default Input;
