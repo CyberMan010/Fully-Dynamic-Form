@@ -1,0 +1,35 @@
+[
+    {
+      "type": "text",
+      "name": "firstName",
+      "label": "First Name",
+      "placeholder": "Enter your first name"
+    },
+    {
+      "type": "email",
+      "name": "email",
+      "label": "Email",
+      "placeholder": "Enter your email",
+      "required": true
+    },
+    {
+      "type": "password",
+      "name": "password",
+      "label": "Password",
+      "placeholder": "Enter your password",
+      "required": true
+    },
+    {
+      "type": "select",
+      "name": "country",
+      "label": "choose your country",
+      "options": ["Syria", "Jordan", "Italy"]
+    },
+    {
+      "type": "number",
+      "name": "age",
+      "label": "Age",
+      "placeholder": "Enter your age",
+      "required": true
+    }
+  ]
