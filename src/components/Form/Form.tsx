@@ -1,19 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Input from '../input/Input';
 import formConfig from '../config/config.json'; 
 import { Button } from "digitinary-ui";
+import { validateForm } from '../helpers/validateForm';
 
 interface FormField {
-  type: string;
-  name: string;
-  label: string;
-  placeholder?: string;
-  options?: string[];
-}
+    type: string;
+    name: string;
+    label: string;
+    placeholder?: string;
+    options?: string[];
+    required?: boolean;
+  }
 
 const DynamicForm: React.FC = () => {
   const [formFields, setFormFields] = useState<FormField[]>(formConfig);
   const [formData, setFormData] = useState<Record<string, string | number>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
@@ -26,13 +30,23 @@ const DynamicForm: React.FC = () => {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     console.log('Form Data:', formData);
-  };
+    
+    const validation = validateForm(formFields, formData);
+    setErrors(validation);
+    if (Object.keys(validation).length === 0) {
+        console.log('Form Data:', formData);
+
+  } else {
+    console.log("Validation errors:", validation);
+  }
+
+
 
   return (
     <form onSubmit={handleSubmit}>
-      {formFields.map((field) => (
+    {formFields.map((field) => (
+      <div key={field.name}>
         <Input
-          key={field.name}
           type={field.type}
           name={field.name}
           label={field.label}
@@ -41,10 +55,13 @@ const DynamicForm: React.FC = () => {
           value={formData[field.name] || ''}
           onChange={handleChange}
         />
-      ))}
-      <Button type="submit">Submit</Button>
-    </form>
+        {errors[field.name] && <span style={{ color: 'red' }}>{errors[field.name]}</span>}
+      </div>
+    ))}
+    <Button type="submit">Submit</Button>
+  </form>
   );
 };
 
 export default DynamicForm;
+
