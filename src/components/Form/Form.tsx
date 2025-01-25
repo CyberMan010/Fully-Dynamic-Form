@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Input from '../input';
 import formConfig from '../config/config.json';
 import { Button } from 'digitinary-ui';
-import { validateForm } from '../helpers/validateForm';
+import { validateForm, validateField } from '../helpers/validateForm';
 
 interface FormField {
   type: string;
@@ -24,6 +24,15 @@ const DynamicForm: React.FC = () => {
       ...prevData,
       [name]: value,
     }));
+
+    const field = formFields.find(f => f.name === name);
+    if (field) {
+      const error = validateField(field, value);
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: error,
+      }));
+    }
   };
 
   const handleSubmit = (event: React.FormEvent) => {
@@ -51,6 +60,7 @@ const DynamicForm: React.FC = () => {
             options={field.options}
             value={formData[field.name] || ''}
             onChange={handleChange}
+            error={errors[field.name]}
           />
           {errors[field.name] && <span style={{ color: 'red' }}>{errors[field.name]}</span>}
         </div>
