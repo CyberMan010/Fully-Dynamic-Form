@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Input from '../input/Input';
+import Input from '../input';
 import formConfig from '../config/config.json';
 import { Button } from 'digitinary-ui';
 import { validateForm } from '../helpers/validateForm';
@@ -14,7 +14,7 @@ interface FormField {
 }
 
 const DynamicForm: React.FC = () => {
-  const [formFields, setFormFields] = useState<FormField[]>(formConfig);
+  const [formFields] = useState<FormField[]>(formConfig);
   const [formData, setFormData] = useState<Record<string, string | number>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -28,8 +28,6 @@ const DynamicForm: React.FC = () => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    console.log('Form Data:', formData);
-
     const validation = validateForm(formFields, formData);
     setErrors(validation);
 
