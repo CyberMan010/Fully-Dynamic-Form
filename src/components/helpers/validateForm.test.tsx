@@ -20,6 +20,7 @@ describe('validateField', () => {
       label: 'Full Name',
       required: true
     };
+    
 
     expect(validateField(field, 'John Doe')).toBe('Full name must have exactly three parts (First Middle Last)');
     expect(validateField(field, 'john Middle last')).toBe('Each name part must start with a capital letter followed by lowercase letters');
