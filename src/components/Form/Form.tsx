@@ -3,6 +3,8 @@ import Input from '../input';
 import formConfig from '../config/config.json';
 import { Button } from 'digitinary-ui';
 import { validateForm, validateField } from '../helpers/validateForm';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './Form.css';
 
 interface FormField {
@@ -54,7 +56,24 @@ const DynamicForm: React.FC = () => {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     if (isFormValid) {
+      toast.success('Form submitted successfully!', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
       console.log('Form submitted:', formData);
+    } else {
+      toast.error('Please fix the errors in the form', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     }
   };
 
