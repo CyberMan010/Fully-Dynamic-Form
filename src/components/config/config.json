@@ -1,10 +1,13 @@
 [
-    {
-      "type": "text",
-      "name": "firstName",
-      "label": "First Name",
-      "placeholder": "Enter your first name"
-    },
+  {
+    "type": "text",
+    "name": "fullName",
+    "label": "Full Name",
+    "placeholder": "Enter your full name",
+    "required": true,
+    "pattern": "^[a-zA-Z]+ [a-zA-Z]+ [a-zA-Z]+$",
+    "minLength": 5
+  },
     {
       "type": "email",
       "name": "email",
@@ -30,6 +33,19 @@
       "name": "age",
       "label": "Age",
       "placeholder": "Enter your age",
+      "required": true
+    },
+    {
+      "type": "checkbox",
+      "name": "terms",
+      "label": "I agree to the terms and conditions",
+      "required": true
+    },
+    {
+      "type": "number",
+      "name": "phone",
+      "label": "Phone number",
+      "placeholder": "Enter your number",
       "required": true
     }
   ]
