@@ -28,8 +28,8 @@ const Input: React.FC<InputProps> = ({
   return (
     <div className="input-group">
     {type === 'checkbox' ? (
-      <div className={`checkbox-group ${error ? 'invalid' : ''}`}>
-   <input
+// In the checkbox group div, add data-testid
+<div className={`checkbox-group ${error ? 'invalid' : ''}`} data-testid="checkbox-group">   <input
       className="checkbox-input"
       type="checkbox"
       name={name}
