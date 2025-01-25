@@ -1,0 +1,62 @@
+.input-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .input-label {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+  
+  .input-field {
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  .input-field:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+  }
+  .input-field[name="fullName"] {
+    text-transform: capitalize;
+  }
+  
+  .input-field[name="fullName"]::placeholder {
+    font-style: italic;
+  }
+
+  .checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0.5rem 0;
+  }
+  
+  .checkbox-input {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #007bff;
+  }
+  
+  .checkbox-label {
+    cursor: pointer;
+    user-select: none;
+    color: #ea6a6a;
+  }
+  
+  .checkbox-group.invalid .checkbox-input {
+    outline: 2px solid #dc3545;
+  }
+  
+  .checkbox-group.valid .checkbox-input {
+    outline: 2px solid #28a745;
+  }

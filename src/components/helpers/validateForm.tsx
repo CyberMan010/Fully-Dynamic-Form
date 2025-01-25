@@ -19,6 +19,7 @@ interface FormField {
   }
   
   export const validateField = (field: FormField, value: string | number): string => {
+    
     if (field.required && !value) {
       return `${field.label} is required`;
     }
@@ -42,6 +43,18 @@ interface FormField {
     if (field.type === 'number' && value && isNaN(Number(value))) {
       return `${field.label} must be a number`;
     }
+    if (field.name === 'fullName') {
+        const nameParts = value.toString().trim().split(' ');
+        if (nameParts.length !== 3) {
+          return 'Full name must have exactly three parts (First Middle Last)';
+        }
+        if (nameParts.some(part => part.length < 2)) {
+          return 'Each name part must be at least 2 characters long';
+        }
+        if (!/^[a-zA-Z]+ [a-zA-Z]+ [a-zA-Z]+$/.test(value.toString())) {
+          return 'Full name can only contain letters and spaces';
+        }
+      }
   
     return '';
   };
