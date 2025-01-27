@@ -1,65 +1,127 @@
-import { validateForm } from "../helpers/validateForm";
+import { render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import '@testing-library/jest-dom';
+import { toast } from 'react-toastify';
+import DynamicForm from './Form';
 
-describe('validateForm', () => {
-  const formFields = [
-    {
-      type: 'text',
-      name: 'firstName',
-      label: 'First Name',
-      required: true,
-    },
-    {
-      type: 'email',
-      name: 'email',
-      label: 'Email',
-      required: true,
-    },
-    {
-      type: 'number',
-      name: 'age',
-      label: 'Age',
-      required: false,
-    },
-  ];
 
-  it('should return errors for required fields', () => {
-    const formData = {
-      firstName: '',
-      email: '',
-      age: '',
-    };
-    const errors = validateForm(formFields, formData);
-    expect(errors.firstName).toBe('First Name is required.');
-    expect(errors.email).toBe('Email is required.');
+// Mock dependencies
+jest.mock('react-toastify', () => ({
+  toast: {
+    success: jest.fn(),
+    error: jest.fn(),
+  },
+  ToastContainer: jest.fn(() => null),
+}));
+
+jest.mock('../config/config.json', () => ([
+  {
+    type: 'text',
+    name: 'fullName',
+    label: 'Full Name',
+    required: true
+  },
+  {
+    type: 'email',
+    name: 'email',
+    label: 'Email',
+    required: true
+  },
+  {
+    type: 'password',
+    name: 'password',
+    label: 'Password',
+    required: true
+  }
+]));
+
+describe('DynamicForm', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('should validate email format', () => {
-    const formData = {
-      firstName: 'John',
-      email: 'invalid-email',
-      age: '25',
-    };
-    const errors = validateForm(formFields, formData);
-    expect(errors.email).toBe('Invalid email format.');
+  test('renders form fields from config', () => {
+    render(<DynamicForm />);
+    expect(screen.getByLabelText('Full Name')).toBeInTheDocument();
+    expect(screen.getByLabelText('Email')).toBeInTheDocument();
+    expect(screen.getByLabelText('Password')).toBeInTheDocument();
   });
 
-  it('should validate number fields', () => {
-    const formData = {
-      firstName: 'John',
-      email: 'john@example.com',
-      age: 'not-a-number',
-    };
-    const errors = validateForm(formFields, formData);
-    expect(errors.age).toBe('Age must be a valid number.');
+  test('validates fields on blur', async () => {
+    render(<DynamicForm />);
+    const fullNameInput = screen.getByLabelText('Full Name');
+    
+    await userEvent.type(fullNameInput, 'John');
+    fireEvent.blur(fullNameInput);
+    
+    expect(await screen.findByText('Full name must have exactly three parts (First Middle Last)')).toBeInTheDocument();
   });
 
-  it('should return no errors for valid data', () => {
-    const formData = {
-      firstName: 'John',
-      email: 'john@example.com',
-      age: '25',
-    };
-    const errors = validateForm(formFields, formData);
-    expect(Object.keys(errors).length).toBe(0);
+  test('updates form data on input change', async () => {
+    render(<DynamicForm />);
+    const emailInput = screen.getByLabelText('Email');
+    
+    await userEvent.type(emailInput, 'test@example.com');
+    expect(emailInput).toHaveValue('test@example.com');
+  });
+
+  test('submit button is disabled when form is invalid', () => {
+    render(<DynamicForm />);
+    expect(screen.getByRole('button', { name: /submit/i })).toBeDisabled();
+  });
+
+  test('shows success toast on valid form submission', async () => {
+    render(<DynamicForm />);
+    
+    await userEvent.type(screen.getByLabelText('Full Name'), 'John Middle Last');
+    await userEvent.type(screen.getByLabelText('Email'), 'test@example.com');
+    await userEvent.type(screen.getByLabelText('Password'), 'Password123!');
+
+    const submitButton = screen.getByRole('button', { name: /submit/i });
+    expect(submitButton).toBeEnabled();
+    
+    await userEvent.click(submitButton);
+    expect(toast.success).toHaveBeenCalledWith(
+      'Form submitted successfully!',
+      expect.any(Object)
+    );
+  });
+
+  test('shows error toast on invalid form submission', async () => {
+    render(<DynamicForm />);
+    
+    const submitButton = screen.getByRole('button', { name: /submit/i });
+    await userEvent.click(submitButton);
+    
+    expect(toast.error).toHaveBeenCalledWith(
+      'Please fix the errors in the form',
+      expect.any(Object)
+    );
+  });
+
+  test('applies correct validation classes', async () => {
+    render(<DynamicForm />);
+    const emailInput = screen.getByLabelText('Email');
+    
+    await userEvent.type(emailInput, 'invalid-email');
+    fireEvent.blur(emailInput);
+    
+    expect(emailInput.closest('.form-group')).toHaveClass('invalid');
+    
+    await userEvent.clear(emailInput);
+    await userEvent.type(emailInput, 'valid@email.com');
+    fireEvent.blur(emailInput);
+    
+    expect(emailInput.closest('.form-group')).toHaveClass('valid');
+  });
+
+  test('handles form reset', async () => {
+    render(<DynamicForm />);
+    
+    const emailInput = screen.getByLabelText('Email') as HTMLInputElement;
+    await userEvent.type(emailInput, 'test@example.com');
+    
+    fireEvent.reset(screen.getByRole('form'));
+    expect(emailInput.value).toBe('');
   });
 });
