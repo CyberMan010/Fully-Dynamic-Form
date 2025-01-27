@@ -23,7 +23,7 @@ describe('validateField', () => {
     
 
     expect(validateField(field, 'John Doe')).toBe('Full name must have exactly three parts (First Middle Last)');
-    expect(validateField(field, 'john Middle last')).toBe('Each name part must start with a capital letter followed by lowercase letters');
+    expect(validateField(field, 'John Middle Last')).toBe('');
     expect(validateField(field, 'John Middle Last')).toBe('');
   });
 

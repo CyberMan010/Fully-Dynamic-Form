@@ -1,6 +1,56 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import Input from '../input';
-import formConfig from '../config/config.json';
+const  formConfig = [
+  {
+    "type": "text",
+    "name": "fullName",
+    "label": "Full Name",
+    "placeholder": "Enter your full name",
+    "required": true,
+    "pattern": "^[a-zA-Z]+ [a-zA-Z]+ [a-zA-Z]+$",
+    "minLength": 5
+  },
+    {
+      "type": "email",
+      "name": "email",
+      "label": "Email",
+      "placeholder": "Enter your email",
+      "required": true
+    },
+    {
+      "type": "password",
+      "name": "password",
+      "label": "Password",
+      "placeholder": "Enter your password",
+      "required": true
+    },
+    {
+      "type": "select",
+      "name": "country",
+      "label": "choose your country",
+      "options": ["Syria", "Jordan", "Italy"]
+    },
+    {
+      "type": "number",
+      "name": "age",
+      "label": "Age",
+      "placeholder": "Enter your age",
+      "required": true
+    },
+    {
+      "type": "checkbox",
+      "name": "terms",
+      "label": "I agree to the terms and conditions",
+      "required": true
+    },
+    {
+      "type": "number",
+      "name": "phone",
+      "label": "Phone number",
+      "placeholder": "Enter your number",
+      "required": true
+    }
+  ];
 import { Button } from 'digitinary-ui';
 import { validateForm, validateField } from '../helpers/validateForm';
 import { ToastContainer, toast } from 'react-toastify';
