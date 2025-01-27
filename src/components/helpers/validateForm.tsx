@@ -27,17 +27,19 @@ interface FormField {
     // Full Name validation
     if (field.name === 'fullName') {
       const nameValue = value.toString().trim();
-      const nameParts = nameValue.split(' ').filter(part => part.length > 0);
-  
+      const nameParts = nameValue.split(' ').filter(part => part.length > 0).map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase());
+
+    
       if (nameParts.length !== 3) {
         return 'Full name must have exactly three parts (First Middle Last)';
       }
-  
+    
       if (nameParts.some(part => part.length < 2 || part.length > 20)) {
         return 'Each name part must be between 2-20 characters';
       }
-  
-      if (!/^[A-Z][a-z]+ [A-Z][a-z]+ [A-Z][a-z]+$/.test(nameValue)) {
+      const transformedName = nameParts.join(' ');
+
+      if (!/^[A-Z][a-z]+ [A-Z][a-z]+ [A-Z][a-z]+$/.test(transformedName)) {
         return 'Each name part must start with a capital letter followed by lowercase letters';
       }
     }
