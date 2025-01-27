@@ -71,11 +71,12 @@ interface FormField {
     }
   
     // Phone number validation
-    if (field.name === 'phone' && value) {
-      if (!/^\+?[1-9]\d{9,14}$/.test(value.toString())) {
-        return 'Please enter a valid phone number (10-15 digits)';
-      }
-    }
+  // Phone number validation
+if (field.name === 'phone' && value) {
+  if (!/^\+?[0-9]{9,15}$/.test(value.toString())) {
+    return 'Please enter a valid phone number (9-15 digits)';
+  }
+}
   
     // Checkbox validation
     if (field.type === 'checkbox' && field.required) {
