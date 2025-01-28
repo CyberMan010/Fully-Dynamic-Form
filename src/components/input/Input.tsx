@@ -1,7 +1,6 @@
 import React from 'react';
 import './Input.css';
 
-
 interface InputProps {
   type: string;
   name: string;
@@ -25,34 +24,51 @@ const Input: React.FC<InputProps> = ({
   onBlur,
   error,
 }) => {
-  return (
-    <div className="input-group">
-    {type === 'checkbox' ? (
-// In the checkbox group div, add data-testid
-<div className={`checkbox-group ${error ? 'invalid' : ''}`} data-testid="checkbox-group">   <input
-      className="checkbox-input"
-      type="checkbox"
-      name={name}
-      checked={value === 'true'}
-      onChange={(e) => onChange?.({
-        ...e,
-        target: {
-          ...e.target,
-          name,
-          value: String(e.target.checked)
-        }
-      })}
-      onBlur={onBlur}
-    />
-        <label className="checkbox-label">{label}</label>
+  const inputId = `${name}-input`;
+
+  if (type === 'checkbox') {
+    return (
+      <div className="input-group">
+        <div 
+          className={`checkbox-group ${error ? 'invalid' : ''}`} 
+          data-testid={`input-${name}`}
+        >
+          <input
+            id={inputId}
+            className="checkbox-input"
+            type="checkbox"
+            name={name}
+            checked={value === 'true'}
+            onChange={(e) => onChange?.({
+              ...e,
+              target: {
+                ...e.target,
+                name,
+                value: String(e.target.checked)
+              }
+            })}
+            onBlur={onBlur}
+            data-testid={`checkbox-${name}`}
+          />
+          <label className="checkbox-label" htmlFor={inputId}>{label}</label>
+        </div>
+        {error && <span className="error-message" data-testid={`error-${name}`}>{error}</span>}
       </div>
-    ) : type === 'select' ? (
+    );
+  }
+
+  if (type === 'select') {
+    return (
+      <div className="input-group">
+        <label htmlFor={inputId}>{label}</label>
         <select 
+          id={inputId}
           className="input-field" 
           name={name} 
           value={value} 
           onChange={onChange}
           onBlur={onBlur}
+          data-testid={`input-${name}`}
         >
           <option value="">Select {label}</option>
           {options?.map((option) => (
@@ -61,18 +77,26 @@ const Input: React.FC<InputProps> = ({
             </option>
           ))}
         </select>
-      ) : (
-        <input
-          className="input-field"
-          type={type}
-          name={name}
-          placeholder={placeholder}
-          value={value}
-          onChange={onChange}
-          onBlur={onBlur}
-        />
-      )}
-      {error && <span className="error-message">{error}</span>}
+        {error && <span className="error-message" data-testid={`error-${name}`}>{error}</span>}
+      </div>
+    );
+  }
+
+  return (
+    <div className="input-group">
+      <label htmlFor={inputId}>{label}</label>
+      <input
+        id={inputId}
+        className="input-field"
+        type={type}
+        name={name}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        onBlur={onBlur}
+        data-testid={`input-${name}`}
+      />
+      {error && <span className="error-message" data-testid={`error-${name}`}>{error}</span>}
     </div>
   );
 };

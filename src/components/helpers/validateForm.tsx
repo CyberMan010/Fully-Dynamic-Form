@@ -27,14 +27,12 @@ interface FormField {
     // Full Name validation
     if (field.name === 'fullName') {
       const nameValue = value.toString().trim();
-      const nameParts = nameValue.split(' ').filter(part => part.length > 0);
+      const nameParts = nameValue.split(' ').filter((part) => part.length > 0);
   
-      // Check for exactly three parts
       if (nameParts.length !== 3) {
         return 'Full name must have exactly three parts (First Middle Last)';
       }
   
-      // Check each part's format
       for (const part of nameParts) {
         if (!/^[A-Z][a-z]+$/.test(part)) {
           return 'Each name part must start with a capital letter followed by lowercase letters';
@@ -47,9 +45,9 @@ interface FormField {
   
     // Email validation
     if (field.type === 'email' && value) {
-      const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(value.toString())) {
-        return 'Please enter a valid email address';
+        return 'Enter a valid email address';
       }
     }
   
@@ -60,7 +58,7 @@ interface FormField {
       if (!/[A-Z]/.test(password)) return 'Password must include an uppercase letter';
       if (!/[a-z]/.test(password)) return 'Password must include a lowercase letter';
       if (!/[0-9]/.test(password)) return 'Password must include a number';
-      if (!/[!@#$%^&*]/.test(password)) return 'Password must include a special character (!@#$%^&*)';
+      if (!/[!@#$%^&*]/.test(password)) return 'Password must include at least one special character (!@#$%^&*)';
     }
   
     // Age validation
@@ -72,16 +70,16 @@ interface FormField {
     }
   
     // Phone number validation
-  // Phone number validation
-if (field.name === 'phone' && value) {
-  if (!/^\+?[0-9]{9,15}$/.test(value.toString())) {
-    return 'Please enter a valid phone number (9-15 digits)';
-  }
-}
+    if (field.name === 'phone' && value) {
+      const phoneRegex = /^\+?[0-9]{9,15}$/;
+      if (!phoneRegex.test(value.toString())) {
+        return 'Enter a valid phone number (9-15 digits)';
+      }
+    }
   
     // Checkbox validation
     if (field.type === 'checkbox' && field.required) {
-      if (value !== 'true') {
+      if (!value || value === 'false') {
         return `Please accept the ${field.label.toLowerCase()}`;
       }
     }
@@ -106,8 +104,8 @@ if (field.name === 'phone' && value) {
   export const validateForm = (formFields: FormField[], formData: FormData): Errors => {
     const errors: Errors = {};
   
-    formFields.forEach(field => {
-      const value = formData[field.name];
+    formFields.forEach((field) => {
+      const value = formData[field.name] ?? ''; // Default to an empty string if field is not present
       const error = validateField(field, value);
       if (error) {
         errors[field.name] = error;
@@ -116,3 +114,4 @@ if (field.name === 'phone' && value) {
   
     return errors;
   };
+  
