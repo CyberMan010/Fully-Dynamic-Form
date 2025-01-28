@@ -35,7 +35,7 @@ describe('validateField', () => {
       required: true
     };
 
-    expect(validateField(field, 'invalid-email')).toBe('Please enter a valid email address');
+    expect(validateField(field, 'invalid-email')).toBe('Enter a valid email address');
     expect(validateField(field, 'test@example.com')).toBe('');
   });
 
@@ -49,7 +49,7 @@ describe('validateField', () => {
 
     expect(validateField(field, 'short')).toBe('Password must be at least 8 characters long');
     expect(validateField(field, 'password123')).toBe('Password must include an uppercase letter');
-    expect(validateField(field, 'Password123')).toBe('Password must include a special character (!@#$%^&*)');
+    expect(validateField(field, 'Password123')).toBe('Password must include at least one special character (!@#$%^&*)');
     expect(validateField(field, 'Password123!')).toBe('');
   });
 });

@@ -19,12 +19,13 @@ describe('Input Component', () => {
 
   test('renders text input with label', () => {
     render(<Input {...defaultProps} />);
-    expect(screen.getByPlaceholderText('Enter test value')).toBeInTheDocument();
+    expect(screen.getByTestId('input-testInput')).toBeInTheDocument();
+    expect(screen.getByLabelText('Test Input')).toBeInTheDocument();
   });
 
   test('handles text input change', async () => {
     render(<Input {...defaultProps} onChange={mockOnChange} />);
-    const input = screen.getByPlaceholderText('Enter test value');
+    const input = screen.getByTestId('input-testInput');
     
     await userEvent.type(input, 'test value');
     expect(mockOnChange).toHaveBeenCalled();
@@ -32,7 +33,7 @@ describe('Input Component', () => {
 
   test('handles blur event', () => {
     render(<Input {...defaultProps} onBlur={mockOnBlur} />);
-    const input = screen.getByPlaceholderText('Enter test value');
+    const input = screen.getByTestId('input-testInput');
     
     fireEvent.blur(input);
     expect(mockOnBlur).toHaveBeenCalled();
@@ -40,7 +41,7 @@ describe('Input Component', () => {
 
   test('displays error message when provided', () => {
     render(<Input {...defaultProps} error="Test error message" />);
-    expect(screen.getByText('Test error message')).toBeInTheDocument();
+    expect(screen.getByTestId('error-testInput')).toHaveTextContent('Test error message');
   });
 
   test('renders checkbox input correctly', () => {
@@ -52,9 +53,9 @@ describe('Input Component', () => {
       />
     );
     
-    const checkbox = screen.getByRole('checkbox');
+    const checkbox = screen.getByTestId('checkbox-testCheckbox');
     expect(checkbox).toBeInTheDocument();
-    expect(screen.getByText('Test Checkbox')).toBeInTheDocument();
+    expect(screen.getByLabelText('Test Checkbox')).toBeInTheDocument();
   });
 
   test('handles checkbox change', async () => {
@@ -67,7 +68,7 @@ describe('Input Component', () => {
       />
     );
     
-    const checkbox = screen.getByRole('checkbox');
+    const checkbox = screen.getByTestId('checkbox-testCheckbox');
     await userEvent.click(checkbox);
     expect(mockOnChange).toHaveBeenCalled();
   });
@@ -83,7 +84,7 @@ describe('Input Component', () => {
       />
     );
     
-    const select = screen.getByRole('combobox');
+    const select = screen.getByTestId('input-testSelect');
     expect(select).toBeInTheDocument();
     options.forEach(option => {
       expect(screen.getByText(option)).toBeInTheDocument();
@@ -102,7 +103,7 @@ describe('Input Component', () => {
       />
     );
     
-    const select = screen.getByRole('combobox');
+    const select = screen.getByTestId('input-testSelect');
     await userEvent.selectOptions(select, 'Option 2');
     expect(mockOnChange).toHaveBeenCalled();
   });
@@ -117,18 +118,20 @@ describe('Input Component', () => {
       />
     );
     
-    expect(screen.getByTestId('checkbox-group')).toHaveClass('invalid');
+    const checkboxGroup = screen.getByTestId('input-testCheckbox');
+    expect(checkboxGroup).toHaveClass('invalid');
   });
 
   test('maintains value in controlled input', () => {
+    const testValue = 'test value';
     render(
       <Input 
         {...defaultProps}
-        value="test value"
+        value={testValue}
       />
     );
     
-    const input = screen.getByPlaceholderText('Enter test value');
-    expect(input).toHaveValue('test value');
+    const input = screen.getByTestId('input-testInput');
+    expect(input).toHaveValue(testValue);
   });
 });
